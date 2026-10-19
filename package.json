@@ -1,0 +1,15 @@
+{
+  "name": "projeto-teste-akcit",
+  "version": "1.0.0",
+  "description": "Testes de integração entre serviços REST gerados com apoio de GenAI (prompts versionados)",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/integracao/",
+    "test:mutacao": "bash scripts/mutacao.sh",
+    "start:consentimento": "node src/consentimento/main.js",
+    "start:envios": "node src/envios/main.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

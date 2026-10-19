@@ -1,0 +1,56 @@
+{
+  "consumidor": "servico-envios",
+  "provedor": "servico-consentimento",
+  "descricao": "Contrato dirigido pelo consumidor: lista apenas o que o Serviço de Envios realmente lê da resposta. Campos extras na resposta são permitidos; faltar ou mudar o tipo de um campo listado quebra o contrato.",
+  "geradoPor": "Prompt 3 (v2) — ver prompts/03-contrato-api.md",
+  "interacoes": [
+    {
+      "id": "CT-01",
+      "descricao": "telefone com consentimento no canal",
+      "estado": [{ "telefone": "+5562999990001", "canal": "whatsapp", "consentido": true }],
+      "requisicao": { "metodo": "GET", "caminho": "/consentimentos/%2B5562999990001", "query": { "canal": "whatsapp" } },
+      "resposta": {
+        "status": 200,
+        "campos": { "consentido": "boolean" },
+        "exemplo": { "telefone": "+5562999990001", "canal": "whatsapp", "consentido": true }
+      },
+      "efeitoNoConsumidor": { "status": 202 }
+    },
+    {
+      "id": "CT-02",
+      "descricao": "telefone com opt-out no canal",
+      "estado": [{ "telefone": "+5562999990002", "canal": "whatsapp", "consentido": false }],
+      "requisicao": { "metodo": "GET", "caminho": "/consentimentos/%2B5562999990002", "query": { "canal": "whatsapp" } },
+      "resposta": {
+        "status": 200,
+        "campos": { "consentido": "boolean" },
+        "exemplo": { "telefone": "+5562999990002", "canal": "whatsapp", "consentido": false }
+      },
+      "efeitoNoConsumidor": { "status": 422, "erro": "CONSENTIMENTO_AUSENTE" }
+    },
+    {
+      "id": "CT-03",
+      "descricao": "telefone sem nenhum registro de consentimento",
+      "estado": [],
+      "requisicao": { "metodo": "GET", "caminho": "/consentimentos/%2B5562999990003", "query": { "canal": "whatsapp" } },
+      "resposta": {
+        "status": 404,
+        "campos": {},
+        "exemplo": { "erro": "CONSENTIMENTO_NAO_ENCONTRADO" }
+      },
+      "efeitoNoConsumidor": { "status": 422, "erro": "CONSENTIMENTO_AUSENTE" }
+    },
+    {
+      "id": "CT-04",
+      "descricao": "consentimento existe em outro canal, não no pedido",
+      "estado": [{ "telefone": "+5562999990004", "canal": "rcs", "consentido": true }],
+      "requisicao": { "metodo": "GET", "caminho": "/consentimentos/%2B5562999990004", "query": { "canal": "whatsapp" } },
+      "resposta": {
+        "status": 404,
+        "campos": {},
+        "exemplo": { "erro": "CONSENTIMENTO_NAO_ENCONTRADO" }
+      },
+      "efeitoNoConsumidor": { "status": 422, "erro": "CONSENTIMENTO_AUSENTE" }
+    }
+  ]
+}
